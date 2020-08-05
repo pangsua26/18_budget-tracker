@@ -63,8 +63,14 @@ self.addEventListener("fetch", function(evt) {
                 });
             }).catch(err => console.log(err))
         );
-        
+
         return;
     }
 
+    // if the request is not for the API, serve static assets using "offline-first" approach.
+    evt.respondWith(
+        caches.match(evt.request).then(function(response) {
+          return response || fetch(evt.request);
+        })
+      );
 });
